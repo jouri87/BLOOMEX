@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex Sleep Calculator – Find Your Perfect Bedtime & Wake-up Time</title>
+    <meta name="description" content="Use the Bloomex Sleep Calculator to discover your ideal sleep cycles. Get personalized sleep and wake-up times for better rest, energy, and health.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes bloom {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .result-card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .flower-icon {
+            animation: bloom 0.7s ease-out forwards;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .twinkle {
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        .light-mode {
+            --bg-primary: linear-gradient(135deg, #E6E6FA 0%, #FFD1DC 50%, #C6E2FF 100%);
+            --text-primary: #4A4A6A;
+            --text-secondary: #6B6B85;
+            --card-bg: #FFFFFF;
+            --card-hover: #F5F7FA;
+            --btn-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --btn-secondary: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            --border-color: #E2E8F0;
+            --ad-bg: rgba(255, 255, 255, 0.7);
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --nav-text: #4A4A6A;
+        }
+
+        .dark-mode {
+            --bg-primary: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #1E1B4B 100%);
+            --text-primary: #E2E8F0;
+            --text-secondary: #94A3B8;
+            --card-bg: #1E293B;
+            --card-hover: #334155;
+            --btn-primary: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+            --btn-secondary: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+            --border-color: #334155;
+            --ad-bg: rgba(30, 41, 59, 0.7);
+            --nav-bg: rgba(15, 23, 42, 0.9);
+            --nav-text: #E2E8F0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><circle cx="15%" cy="10%" r="2" fill="white" opacity="0.7"/><circle cx="25%" cy="20%" r="1" fill="white" opacity="0.5"/><circle cx="10%" cy="30%" r="1.5" fill="white" opacity="0.6"/><circle cx="20%" cy="40%" r="1" fill="white" opacity="0.4"/><circle cx="30%" cy="15%" r="1" fill="white" opacity="0.5"/><circle cx="5%" cy="25%" r="2" fill="white" opacity="0.7"/><circle cx="85%" cy="15%" r="1.5" fill="white" opacity="0.6"/><circle cx="75%" cy="25%" r="1" fill="white" opacity="0.5"/><circle cx="90%" cy="35%" r="2" fill="white" opacity="0.7"/><circle cx="80%" cy="10%" r="1" fill="white" opacity="0.4"/></svg>');
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.5s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-bg {
+            background: var(--bg-primary);
+        }
+        
+        .btn-primary {
+            background: var(--btn-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.2);
+        }
+        
+        .btn-secondary {
+            background: var(--btn-secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(161, 196, 253, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            background: var(--card-hover);
+        }
+        
+        .ad-placeholder {
+            background: var(--ad-bg);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .navbar {
+            background: var(--nav-bg);
+            color: var(--nav-text);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-link {
+            color: var(--nav-text);
+            transition: all 0.2s ease;
+        }
+
+        .navbar-link:hover {
+            color: #7C3AED;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                background: var(--nav-bg);
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                transition: all 0.3s ease;
+                z-index: 999;
+            }
+            .nav-menu.active {
+                left: 0;
+            }
+        }
+
+        .glow {
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen font-poppins text-gray-800 light-mode">
+    <!-- Navigation Bar -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 shadow-md py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center">
+                <div class="relative">
+                    <i data-feather="moon" class="text-indigo-500 w-6 h-6 mr-2"></i>
+                    <i data-feather="zap" class="absolute -top-1 -right-1 text-yellow-400 w-3 h-3"></i>
+                </div>
+                <span class="font-bold text-xl bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Bloomex</span>
+            </a>
+            
+            <div class="hamburger" id="hamburger">
+                <i data-feather="menu" class="w-6 h-6"></i>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#" class="navbar-link">Home</a>
+                <a href="#" class="navbar-link">About</a>
+                <a href="#" class="navbar-link">Privacy Policy</a>
+                <a href="#" class="navbar-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <button id="themeToggle" class="theme-toggle">
+        <i data-feather="moon" class="text-indigo-500"></i>
+    </button>
+
+    <div class="floating-element" style="top: 10%; left: 5%;">
+        <i data-feather="cloud" class="text-blue-200 w-16 h-16 floating" style="animation-delay: 0s;"></i>
+    </div>
+    <div class="floating-element" style="top: 20%; right: 10%;">
+        <i data-feather="star" class="text-yellow-200 w-12 h-12 floating twinkle" style="animation-delay: 1s;"></i>
+    </div>
+    <div class="floating-element" style="top: 60%; left: 15%;">
+        <i data-feather="flower" class="text-pink-200 w-14 h-14 floating" style="animation-delay: 2s;"></i>
+    </div>
+
+    <div class="container mx-auto px-4 py-32 max-w-4xl relative">
+        <header class="text-center mb-10">
+            <div class="flex justify-center items-center mb-4">
+                <div class="relative mr-3">
+                    <i data-feather="moon" class="text-indigo-500 w-10 h-10"></i>
+                    <i data-feather="zap" class="absolute -top-1 -right-1 text-yellow-400 w-5 h-5"></i>
+                </div>
+                <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Bloomex Sleep Calculator</h1>
+            </div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Welcome to Bloomex Sleep Calculator – a simple tool that helps you find the best times to sleep and wake up based on natural sleep cycles. 
+                Whether you want to wake up refreshed, improve your health, or manage your daily routine, our calculator gives you science-backed recommendations.
+            </p>
+            
+            <!-- Ad Space 1 -->
+            <div class="ad-placeholder flex items-center justify-center my-8 py-8">
+                <span class="text-gray-500 font-medium">Advertisement</span>
+            </div>
+        </header>
+
+        <main class="bg-white rounded-xl shadow-lg p-6 mb-10">
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button id="modeWakeUp" class="btn-primary text-white font-medium py-3 px-6 rounded-full shadow-md active">
+                    <i data-feather="sun" class="inline mr-2"></i> I want to wake up at...
+                </button>
+                <button id="modeGoToBed" class="btn-secondary text-gray-800 font-medium py-3 px-6 rounded-full shadow-md">
+                    <i data-feather="moon" class="inline mr-2"></i> I want to go to bed at...
+                </button>
+            </div>
+
+            <div class="text-center mb-10">
+                <label for="timeInput" id="inputLabel" class="block text-lg font-medium text-gray-700 mb-3">I want to wake up at:</label>
+                <input type="time" id="timeInput" value="07:00" 
+                    class="text-center text-xl border-2 border-gray-200 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+            </div>
+
+            <div id="results" class="mt-8 pt-8 border-t border-gray-100">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 flex items-center justify-center">
+                    <i data-feather="clock" class="mr-2 text-indigo-500"></i> Your Recommended Sleep Times
+                </h2>
+                <div class="results-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="resultsGrid">
+                    <!-- Results will be inserted here by JavaScript -->
+                </div>
+                <p id="disclaimer" class="text-sm text-gray-500 mt-6 text-center">
+                    These are ideal times based on 90-minute sleep cycles. It usually takes about 15 minutes to fall asleep.
+                </p>
+            </div>
+            
+            <!-- Ad Space 2 -->
+            <div class="ad-placeholder flex items-center justify-center my-8 py-8">
+                <span class="text-gray-500 font-medium">Advertisement</span>
+            </div>
+        </main>
+
+        <section class="bg-white rounded-xl shadow-lg p-6 mb-10">
+            <h3 class="text-2xl font-bold text-center mb-6 text-gray-800 flex items-center justify-center">
+                <i data-feather="star" class="mr-2 text-yellow-500"></i> Tips for Better Sleep
+            </h3>
+            <ul class="space-y-3">
+                <li class="flex items-start p-4 rounded-lg bg-gray-50 card-hover">
+                    <i data-feather="eye-off" class="text-purple-500 mr-3 mt-1"></i>
+                    <span>Avoid screens for at least an hour before bed</span>
+                </li>
+                <li class="flex items-start p-4 rounded-lg bg-gray-50 card-hover">
+                    <i data-feather="clock" class="text-blue-500 mr-3 mt-1"></i>
+                    <span>Maintain a consistent sleep schedule, even on weekends</span>
+                </li>
+                <li class="flex items-start p-4 rounded-lg bg-gray-50 card-hover">
+                    <i data-feather="coffee" class="text-amber-500 mr-3 mt-1"></i>
+                    <span>Limit caffeine and heavy meals late in the day</span>
+                </li>
+                <li class="flex items-start p-4 rounded-lg bg-gray-50 card-hover">
+                    <i data-feather="wind" class="text-green-500 mr-3 mt-1"></i>
+                    <span>Create a relaxing bedtime routine (e.g., warm bath, reading)</span>
+                </li>
+                <li class="flex items-start p-4 rounded-lg bg-gray-50 card-hover">
+                    <i data-feather="droplet" class="text-indigo-500 mr-3 mt-1"></i>
+                    <span>Ensure your bedroom is dark, quiet, and cool</span>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="text-center text-gray-500 text-sm mt-10">
+            <p>&copy; 2023 Bloomex Sleep Calculator. All rights reserved.</p>
+            <p class="mt-2">Designed with <i data-feather="heart" class="inline w-4 h-4 text-red-500"></i> for better sleep</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        function toggleTheme() {
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i data-feather="sun" class="text-yellow-300 glow"></i>';
+                localStorage.setItem('theme', 'dark');
+                
+                // Update floating elements for dark mode
+                document.querySelectorAll('.floating-element i').forEach(icon => {
+                    if (icon.dataset.feather === 'star') {
+                        icon.classList.add('glow');
+                    }
+                    if (icon.dataset.feather === 'moon') {
+                        icon.classList.add('glow');
+                    }
+                });
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                themeToggle.innerHTML = '<i data-feather="moon" class="text-indigo-500"></i>';
+                localStorage.setItem('theme', 'light');
+                
+                // Update floating elements for light mode
+                document.querySelectorAll('.floating-element i').forEach(icon => {
+                    icon.classList.remove('glow');
+                });
+            }
+            feather.replace();
+        }
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.remove('light-mode');
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i data-feather="sun" class="text-yellow-300 glow"></i>';
+            
+            // Update floating elements for dark mode if needed
+            document.querySelectorAll('.floating-element i').forEach(icon => {
+                if (icon.dataset.feather === 'star') {
+                    icon.classList.add('glow');
+                }
+                if (icon.dataset.feather === 'moon') {
+                    icon.classList.add('glow');
+                }
+            });
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Mobile Navigation Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            if (navMenu.classList.contains('active')) {
+                hamburger.innerHTML = '<i data-feather="x"></i>';
+            } else {
+                hamburger.innerHTML = '<i data-feather="menu"></i>';
+            }
+            feather.replace();
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.innerHTML = '<i data-feather="menu"></i>';
+                feather.replace();
+            });
+        });
+
+        // Sleep Calculator Logic
+        const timeInput = document.getElementById('timeInput');
+        const inputLabel = document.getElementById('inputLabel');
+        const modeWakeUpButton = document.getElementById('modeWakeUp');
+        const modeGoToBedButton = document.getElementById('modeGoToBed');
+        const resultsGrid = document.getElementById('resultsGrid');
+
+        let currentMode = 'wakeUp';
+        const timeToFallAsleep = 15;
+
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        function calculateSleepTimes() {
+            const inputTime = timeInput.value;
+            if (!inputTime) return;
+
+            const [hoursStr, minutesStr] = inputTime.split(':');
+            let baseDate = new Date();
+            baseDate.setHours(parseInt(hoursStr, 10));
+            baseDate.setMinutes(parseInt(minutesStr, 10));
+            baseDate.setSeconds(0);
+            baseDate.setMilliseconds(0);
+
+            resultsGrid.innerHTML = '';
+            let times = [];
+
+            if (currentMode === 'wakeUp') {
+                let wakeUpTime = new Date(baseDate.getTime() - timeToFallAsleep * 60 * 1000);
+                for (let i = 0; i < 6; i++) {
+                    let bedtime = new Date(wakeUpTime.getTime() - (90 * (i + 1)) * 60 * 1000);
+                    times.push(bedtime);
+                }
+                times.reverse();
+            } else {
+                let bedTime = new Date(baseDate.getTime() + timeToFallAsleep * 60 * 1000);
+                for (let i = 0; i < 6; i++) {
+                    let wakeUpTime = new Date(bedTime.getTime() + (90 * (i + 1)) * 60 * 1000);
+                    times.push(wakeUpTime);
+                }
+            }
+
+            times.forEach((time, index) => {
+                const card = document.createElement('div');
+                card.className = 'result-card bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-lg text-center shadow-md';
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = `
+                    <div class="flower-icon text-3xl mb-2 text-purple-500">
+                        ${index % 2 === 0 ? '<i data-feather="moon"></i>' : '<i data-feather="star"></i>'}
+                    </div>
+                    <div class="font-bold text-xl">${formatTime(time)}</div>
+                    <div class="text-sm text-gray-500 mt-1">${currentMode === 'wakeUp' ? 'Go to bed at' : 'Wake up at'}</div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+            
+            // Refresh feather icons after adding new ones
+            feather.replace();
+        }
+
+        modeWakeUpButton.addEventListener('click', () => {
+            currentMode = 'wakeUp';
+            inputLabel.textContent = 'I want to wake up at:';
+            modeWakeUpButton.className = modeWakeUpButton.className.replace('btn-secondary', 'btn-primary') + ' text-white';
+            modeGoToBedButton.className = modeGoToBedButton.className.replace('btn-primary', 'btn-secondary') + ' text-gray-800';
+            calculateSleepTimes();
+        });
+
+        modeGoToBedButton.addEventListener('click', () => {
+            currentMode = 'goToBed';
+            inputLabel.textContent = 'I want to go to bed at:';
+            modeGoToBedButton.className = modeGoToBedButton.className.replace('btn-secondary', 'btn-primary') + ' text-white';
+            modeWakeUpButton.className = modeWakeUpButton.className.replace('btn-primary', 'btn-secondary') + ' text-gray-800';
+            calculateSleepTimes();
+        });
+
+        timeInput.addEventListener('change', calculateSleepTimes);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme toggle icon
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i data-feather="sun" class="text-yellow-300 glow"></i>';
+            } else {
+                themeToggle.innerHTML = '<i data-feather="moon" class="text-indigo-500"></i>';
+            }
+            
+            feather.replace();
+            
+            // Set initial time to current time
+            const now = new Date();
+            const defaultHours = String(now.getHours()).padStart(2, '0');
+            const defaultMinutes = String(now.getMinutes()).padStart(2, '0');
+            timeInput.value = `${defaultHours}:${defaultMinutes}`;
+            calculateSleepTimes();
+        });
+    </script>
+</body>
+</html>
